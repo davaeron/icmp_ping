@@ -72,16 +72,27 @@ defmodule IcmpPing do
         name: IcmpPing.Supervisor
       )
 
-    sup_pid
-    |> Supervisor.which_children()
-    |> Enum.find_value(fn {IcmpPing.Server, child, _, _} -> child end)
-    |> GenServer.call({:ping, ip, opts}, timeout)
+    ret =
+      sup_pid
+      |> Supervisor.which_children()
+      |> Enum.find_value(fn {IcmpPing.Server, child, _, _} -> child end)
+      |> GenServer.call({:ping, ip, opts}, timeout)
+
+    Supervisor.stop(sup_pid)
+    ret
   end
 
-  defp send_ping(socket, ip_addr) do
-    packet = IcmpPing.Icmp.Packet.new()
+  defp send_ping(socket, ip_addr) when IpAddr.is_ipv4(ip_addr) do
+    packet = IcmpPing.Icmp.PacketV4.new()
     :socket.sendto(socket, packet, get_dest(ip_addr))
   end
+
+  defp send_ping(socket, ip_addr) when IpAddr.is_ipv6(ip_addr) do
+    packet = IcmpPing.Icmp.PacketV6.new()
+    :socket.sendto(socket, packet, get_dest(ip_addr))
+  end
+
+  defp send_ping(_, _), do: {:error, :malformed_ip_address}
 
   defp get_dest(ip_addr) when IpAddr.is_ipv4(ip_addr), do: %{family: :inet, addr: ip_addr}
 

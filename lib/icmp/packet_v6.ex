@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule IcmpPing.Icmp.Packet do
+defmodule IcmpPing.Icmp.PacketV6 do
   @moduledoc false
 
   @empty_checksum <<0::16>>

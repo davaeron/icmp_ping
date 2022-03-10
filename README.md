@@ -15,6 +15,13 @@ def deps do
 end
 ```
 
+In Linux execute following lines of code to allow userlevel ping for current user group:
+
+$ echo "net.ipv4.ping_group_range = `id -g` `id -g`" | sudo tee -a /etc/sysctl.conf
+
+$ sudo sysctl -p
+
+
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/icmp_ping>.

@@ -23,7 +23,7 @@ defmodule IcmpPing.Icmp.Socket do
   end
 
   def open(ip_addr, opts) when IpAddr.is_ipv6(ip_addr) do
-    :socket.open(:inet6, :dgram, :icmp6, opts)
+    :socket.open(:inet6, :dgram, 58, opts)
   end
 
   def open(_), do: {:error, :malformed_ip_address}

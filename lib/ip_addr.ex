@@ -19,9 +19,7 @@
 # SOFTWARE.
 
 defmodule IcmpPing.IpAddr do
-  @moduledoc """
-  This file is from NetAddress by Lambda, Inc., and Isaac Yonemoto.
-  """
+  @moduledoc false
 
   @typedoc "ipv4 representation in erlang."
   @type v4 :: {byte, byte, byte, byte}
