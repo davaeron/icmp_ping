@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-defmodule IcmpPing.IpAddr do
+defmodule ICMPPing.IPAddress do
   @moduledoc false
 
   @typedoc "ipv4 representation in erlang."
@@ -45,11 +45,11 @@ defmodule IcmpPing.IpAddr do
   true if the argument is an ipv4 datatype
   usable in guards.
   ```elixir
-  iex> IcmpPing.IpAddr.is_ipv4({10, 0, 0, 1})
+  iex> ICMPPing.IPAddress.is_ipv4({10, 0, 0, 1})
   true
-  iex> IcmpPing.IpAddr.is_ipv4(:foo)
+  iex> ICMPPing.IPAddress.is_ipv4(:foo)
   false
-  iex> IcmpPing.IpAddr.is_ipv4({256, 0, 0, 0})
+  iex> ICMPPing.IPAddress.is_ipv4({256, 0, 0, 0})
   false
   ```
   """
@@ -62,11 +62,11 @@ defmodule IcmpPing.IpAddr do
   true if the argument is an ipv6 datatype
   usable in guards.
   ```elixir
-  iex> IcmpPing.IpAddr.is_ipv6({0, 0, 0, 0, 0, 0, 0, 1})
+  iex> ICMPPing.IPAddress.is_ipv6({0, 0, 0, 0, 0, 0, 0, 1})
   true
-  iex> IcmpPing.IpAddr.is_ipv6(:foo)
+  iex> ICMPPing.IPAddress.is_ipv6(:foo)
   false
-  iex> IcmpPing.IpAddr.is_ipv6({0x10000, 0, 0, 0, 0, 0, 0, 1})
+  iex> ICMPPing.IPAddress.is_ipv6({0x10000, 0, 0, 0, 0, 0, 0, 1})
   false
   ```
   """
@@ -81,9 +81,9 @@ defmodule IcmpPing.IpAddr do
   true if the argument is either ipv6 or ipv4 datatype
   usable in guards.
   ```elixir
-  iex> IcmpPing.IpAddr.is_ip({0, 0, 0, 0, 0, 0, 0, 1})
+  iex> ICMPPing.IPAddress.is_ip({0, 0, 0, 0, 0, 0, 0, 1})
   true
-  iex> IcmpPing.IpAddr.is_ip({127, 0, 0, 1})
+  iex> ICMPPing.IPAddress.is_ip({127, 0, 0, 1})
   true
   ```
   """
@@ -95,7 +95,7 @@ defmodule IcmpPing.IpAddr do
   @doc """
   Converts an ip address from a string.
   ```elixir
-  iex> IcmpPing.IpAddr.from_string!("255.255.255.255")
+  iex> ICMPPing.IPAddress.from_string!("255.255.255.255")
   {255, 255, 255, 255}
   ```
   """

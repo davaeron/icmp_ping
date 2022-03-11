@@ -1,4 +1,4 @@
-defmodule IcmpPing.MixProject do
+defmodule ICMPPing.MixProject do
   use Mix.Project
 
   def project do
@@ -22,10 +22,10 @@ defmodule IcmpPing.MixProject do
   defp deps do
     [
       # static analysis tools
-      {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
       # {:dialyxir, "~> 1.1.0", only: :dev, runtime: false},
       # {:licensir, "~> 0.4.2", only: :dev, runtime: false},
-      # {:ex_doc, "~> 0.20.2", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.28.2", only: :dev, runtime: false}
 
       # # testing tools
       # {:mox, "~> 0.5", only: :test},

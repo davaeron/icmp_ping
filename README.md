@@ -1,4 +1,4 @@
-# IcmpPing
+# ICMPPing
 
 **TODO: Add description**
 

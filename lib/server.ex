@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule IcmpPing.Server do
+defmodule ICMPPing.Server do
   @moduledoc false
+
   use GenServer
 
   def start_link(), do: GenServer.start_link(__MODULE__, [])
@@ -23,6 +24,6 @@ defmodule IcmpPing.Server do
 
   @impl true
   def handle_call({:ping, ip, opts}, _from, state) do
-    {:reply, IcmpPing.ping(ip, opts), state}
+    {:reply, ICMPPing.ping(ip, opts), state}
   end
 end

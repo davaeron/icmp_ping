@@ -12,34 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule IcmpPing do
+defmodule ICMPPing do
   @moduledoc """
-  Documentation for `IcmpPing`.
+  Documentation for `ICMPPing`.
   """
 
-  alias IcmpPing.IpAddr
-  require IpAddr
+  alias ICMPPing.IPAddress
+  require IPAddress
 
   @doc """
   Ping IP.
 
   ## Examples
 
-      iex> IcmpPing.ping("127.0.0.1")
+      iex> ICMPPing.ping("127.0.0.1")
       :pong
 
-      iex> IcmpPing.ping("::1")
+      iex> ICMPPing.ping("::1")
       :pong
   """
   def ping(ip, opts \\ %{}) do
     # convert IP to erlang format
-    {:ok, ip_addr} = IpAddr.from_string(ip)
+    {:ok, ip_addr} = IPAddress.from_string(ip)
 
     # create socket
-    {:ok, socket} = IcmpPing.Icmp.Socket.open(ip_addr, opts)
+    {:ok, socket} = ICMPPing.ICMP.Socket.open(ip_addr, opts)
 
+    packet_opts = %{}
     # send ping
-    :ok = send_ping(socket, ip_addr)
+    :ok = send_ping(socket, ip_addr, packet_opts)
 
     # receive pong
     :ok = receive_ping(socket, ip_addr)
@@ -52,51 +53,45 @@ defmodule IcmpPing do
 
   ## Examples
 
-      iex> IcmpPing.ping_sup("127.0.0.1")
-      :pong
+      # iex> ICMPPing.ping_sup("127.0.0.1")
+      # :pong
 
-      iex> IcmpPing.ping_sup("::1")
-      :pong
+      # iex> ICMPPing.ping_sup("::1")
+      # :pong
   """
   def ping_sup(ip, opts \\ %{}, restart_value \\ :transient, timeout \\ 4000) do
     {:ok, sup_pid} =
       Supervisor.start_link(
         [
           %{
-            id: IcmpPing.Server,
-            start: {IcmpPing.Server, :start_link, []},
+            id: ICMPPing.Server,
+            start: {ICMPPing.Server, :start_link, []},
             restart: restart_value
           }
         ],
         strategy: :one_for_one,
-        name: IcmpPing.Supervisor
+        name: ICMPPing.Supervisor
       )
 
     ret =
       sup_pid
       |> Supervisor.which_children()
-      |> Enum.find_value(fn {IcmpPing.Server, child, _, _} -> child end)
+      |> Enum.find_value(fn {ICMPPing.Server, child, _, _} -> child end)
       |> GenServer.call({:ping, ip, opts}, timeout)
 
     Supervisor.stop(sup_pid)
     ret
   end
 
-  defp send_ping(socket, ip_addr) when IpAddr.is_ipv4(ip_addr) do
-    packet = IcmpPing.Icmp.PacketV4.new()
+  defp send_ping(socket, ip_addr, packet_options) do
+    # TODO packet options
+    packet = ICMPPing.ICMP.Packet.new(ip_addr: ip_addr)
     :socket.sendto(socket, packet, get_dest(ip_addr))
   end
 
-  defp send_ping(socket, ip_addr) when IpAddr.is_ipv6(ip_addr) do
-    packet = IcmpPing.Icmp.PacketV6.new()
-    :socket.sendto(socket, packet, get_dest(ip_addr))
-  end
+  defp get_dest(ip_addr) when IPAddress.is_ipv4(ip_addr), do: %{family: :inet, addr: ip_addr}
 
-  defp send_ping(_, _), do: {:error, :malformed_ip_address}
-
-  defp get_dest(ip_addr) when IpAddr.is_ipv4(ip_addr), do: %{family: :inet, addr: ip_addr}
-
-  defp get_dest(ip_addr) when IpAddr.is_ipv6(ip_addr), do: %{family: :inet6, addr: ip_addr}
+  defp get_dest(ip_addr) when IPAddress.is_ipv6(ip_addr), do: %{family: :inet6, addr: ip_addr}
 
   defp receive_ping(_socket, _ip_addr) do
     :ok

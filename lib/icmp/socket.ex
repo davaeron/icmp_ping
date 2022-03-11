@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-defmodule IcmpPing.Icmp.Socket do
+defmodule ICMPPing.ICMP.Socket do
   @moduledoc false
 
-  alias IcmpPing.IpAddr
-  require IpAddr
+  alias ICMPPing.IPAddress
+  require IPAddress
 
-  def open(ip_addr, opts) when IpAddr.is_ipv4(ip_addr) do
+  def open(ip_addr, opts) when IPAddress.is_ipv4(ip_addr) do
     :socket.open(:inet, :dgram, :icmp, opts)
   end
 
-  def open(ip_addr, opts) when IpAddr.is_ipv6(ip_addr) do
+  def open(ip_addr, opts) when IPAddress.is_ipv6(ip_addr) do
     :socket.open(:inet6, :dgram, 58, opts)
   end
 
